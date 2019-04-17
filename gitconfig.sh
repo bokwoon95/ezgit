@@ -55,9 +55,9 @@ gitconfig() {
 
 
   ## [pull] ##
-  if ! git config --global pull.rebase >/dev/null 2>&1; then
-    git config --global pull.rebase true
-  fi; echo "pull.rebase : $(git config --global pull.rebase)"
+  # if ! git config --global pull.rebase >/dev/null 2>&1; then
+  #   git config --global pull.rebase true
+  # fi; echo "pull.rebase : $(git config --global pull.rebase)"
 
 
   ## [diff] ##
