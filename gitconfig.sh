@@ -5,7 +5,7 @@ gitconfig() {
   # alias 'g' to 'git' if user has not already used it
   [ "${SHELL##*/}" == "zsh" ] && shellrc=$HOME/.zshrc
   [ "${SHELL##*/}" == "bash" ] && shellrc=$HOME/.bashrc
-  if ! grep "^alias g=" $shellrc >/dev/null 2>&1; then
+  if ! grep "^\s*alias g=" $shellrc >/dev/null 2>&1; then
     echo "alias g=\"git \"" >> $shellrc
     source $shellrc
   fi
@@ -82,15 +82,17 @@ gitconfig() {
 
 
   ## [pager] ##
-  if [ ! -f "/usr/local/opt/git/share/git-core/contrib/diff-highlight/diff-highlight" ]; then
-    sudo curl https://raw.githubusercontent.com/git/git/fd99e2bda0ca6a361ef03c04d6d7fdc7a9c40b78/contrib/diff-highlight/diff-highlight -Lo /usr/local/bin/diff-highlight --create-dirs || dhfail="true"
-    sudo chmod a+x /usr/local/bin/diff-highlight || dhfail="true"
-    dhpath="/usr/local/bin/diff-highlight"
-  else
+  if [ -f "/usr/local/opt/git/share/git-core/contrib/diff-highlight/diff-highlight" ]; then
     dhpath="/usr/local/opt/git/share/git-core/contrib/diff-highlight/diff-highlight"
+  else
+    if ! command -v diff-highlight >/dev/null 2>&1; then
+      sudo curl https://raw.githubusercontent.com/git/git/fd99e2bda0ca6a361ef03c04d6d7fdc7a9c40b78/contrib/diff-highlight/diff-highlight -Lo /usr/local/bin/diff-highlight --create-dirs
+      sudo chmod a+x /usr/local/bin/diff-highlight
+    fi
+    dhpath="$(command -v diff-highlight)"
   fi
 
-  if [ \"$dhfail\" = "" ]; then
+  if [ "$dhpath" ]; then
     if ! git config --global pager.log >/dev/null 2>&1; then
       git config --global pager.log "$dhpath | less -RiMSFX#4"
     fi; echo "pager.log : $(git config --global pager.log)"
