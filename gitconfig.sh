@@ -427,6 +427,12 @@ gitconfig() {
   else
     echo "alias truncatehistory already defined"
   fi; # truncatehistory
+  if ! git config --global alias.eh >/dev/null 2>&1; then
+    git config --global alias.eh "!eh() { git rebase -i \"$1~1\"; }; eh"
+    echo "alias eh ✓"
+  else
+    echo "alias eh already defined"
+  fi
 
 
   # https://thoughtbot.com/blog/sed-102-replace-in-place
