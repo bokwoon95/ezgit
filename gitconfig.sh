@@ -190,7 +190,7 @@ gitconfig() {
     git config --global alias.goto "!goto() {
     git checkout --quiet \"\$1\"
     && git branch -f master HEAD
-    && git checkout --quiet master; 
+    && git checkout --quiet master;
     git status; }; goto"
     echo "alias goto ✓"
   else
@@ -293,6 +293,12 @@ gitconfig() {
   else
     echo "alias c already defined"
   fi; # c
+  if ! git config --global alias.ct >/dev/null 2>&1; then
+    git config --global alias.ct "!ct() { git fetch; git checkout --track \"origin/\$1\"; }; ct"
+    echo "alias ct ✓"
+  else
+    echo "alias ct already defined"
+  fi; # ct
   if ! git config --global alias.cb >/dev/null 2>&1; then
     git config --global alias.cb "checkout -b"
     echo "alias cb ✓"
@@ -412,6 +418,13 @@ gitconfig() {
   else
     echo "alias facpush already defined"
   fi; # facpush
+  if ! git config --global alias.fac >/dev/null 2>&1; then
+    git config --global alias.fac "!fac() {
+    git add . && git commit --amend --no-edit; }; fac"
+    echo "alias fac ✓"
+  else
+    echo "alias fac already defined"
+  fi; # fac
   if ! git config --global alias.truncatehistory >/dev/null 2>&1; then
     git config --global alias.truncatehistory "!truncatehistory() {
     read -p 'Are you sure you want to delete everything but the latest commit? Enter \"YES TAKE ME AWAY\" to proceed: ' REPLY;
@@ -428,11 +441,22 @@ gitconfig() {
     echo "alias truncatehistory already defined"
   fi; # truncatehistory
   if ! git config --global alias.eh >/dev/null 2>&1; then
-    git config --global alias.eh "!eh() { git rebase -i \"$1~1\"; }; eh"
+    git config --global alias.eh "!eh() { git rebase -i \"\$1~1\"; }; eh"
     echo "alias eh ✓"
   else
     echo "alias eh already defined"
-  fi
+  fi; # eh
+  if ! git config --global alias.nuke >/dev/null 2>&1; then
+    git config --global alias.nuke "!nuke() {
+    argc=\"\$#\";: \"\$((i=0))\";
+    while [ \"\$i\" -lt \"\$argc\" ]; do
+    git branch -D \"\$1\" && git push origin :\"\$1\";
+    shift;: \"\$((i=i+1))\";
+    done; }; nuke"
+    echo "alias nuke ✓"
+  else
+    echo "alias nuke already defined"
+  fi; # nuke
 
 
   # https://thoughtbot.com/blog/sed-102-replace-in-place
