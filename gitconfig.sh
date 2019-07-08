@@ -358,6 +358,17 @@ gitconfig() {
   else
     echo "alias ec already defined"
   fi; # ec
+  if ! git config --global alias.listfiles >/dev/null 2>&1; then
+    git config --global alias.listfiles "!listfiles() {
+    if [ \$# -eq 0 ];
+    then branch=HEAD;
+    else branch=\"\$1\"; fi;
+    git ls-tree --name-only -r \"\$branch\";
+    }; listfiles"
+    echo "alias listfiles ✓"
+  else
+    echo "alias listfiles already defined"
+  fi; # listfiles
   if ! git config --global alias.copyfile >/dev/null 2>&1; then
     git config --global alias.copyfile "!copyfile() {
     fext=\"\$(echo \"\$2\" | awk -F. '{print \$NF}')\";
