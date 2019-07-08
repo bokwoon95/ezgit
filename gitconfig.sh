@@ -360,13 +360,17 @@ gitconfig() {
   fi; # ec
   if ! git config --global alias.copyfile >/dev/null 2>&1; then
     git config --global alias.copyfile "!copyfile() {
-    fname=\"\${2%.*}\";
-    fext=\".\${2##*.}\";
+    fext=\"\$(echo \"\$2\" | awk -F. '{print \$NF}')\";
+    fname=\"\$(echo \"\$2\" | awk -F.\"\$fext\"'\$' '{print \$1}')\";
     [ \"\$fname\" = \"\$fext\" ] && fext='';
-    [ \"\$fname\" = \"\" ] && (fname=\"\$fext\" && fext='');
+    [ \"\$fname\" = '' ] && fname=\"\$fext\" && fext='';
+    [ \"\$fext\" != '' ] && fext=\".\$fext\";
+    [ \"\$(echo \"\$2\" | head -c1 )\" = '.' ] && fname=\".\$fname\";
     branch=\$(echo \"\$1\" | sed 's/[[:space:]]\\{1,\\}/_/g');
-    git show \"\$1\":\"\$2\" > \"\$fname_\$branch\$fext\";
-    git status; }; copyfile"
+    if git show \"\$1\":\"\$2\" >/dev/null 2>&1;
+    then git show \"\$1\":\"\$2\" > \"\$fname.\$branch\$fext\"; git status;
+    else echo \"file '\$2' not found in branch '\$branch'\";
+    fi; }; copyfile"
     echo "alias copyfile ✓"
   else
     echo "alias copyfile already defined"
