@@ -456,11 +456,29 @@ gitconfig() {
     echo "alias truncatehistory already defined"
   fi; # truncatehistory
   if ! git config --global alias.eh >/dev/null 2>&1; then
-    git config --global alias.eh "!eh() { git rebase -i \"\$1~1\"; }; eh"
+    git config --global alias.eh "!eh() {
+    branch=\"\$1\"; shift;
+    git rebase -i \"\$branch~1\" \"\$@\"; }; eh"
     echo "alias eh ✓"
   else
     echo "alias eh already defined"
   fi; # eh
+  if ! git config --global alias.eh-overwrite >/dev/null 2>&1; then
+    git config --global alias.eh-overwrite "!ehoverwrite() {
+    branch=\"\$1\"; shift;
+    git rebase -i -Xtheirs \"\$branch~1\" \"\$@\" ; }; ehoverwrite"
+    echo "alias eh-overwrite ✓"
+  else
+    echo "alias eh-overwrite already defined"
+  fi; # eh-overwrite
+  if ! git config --global alias.eh-preserve >/dev/null 2>&1; then
+    git config --global alias.eh-preserve "!ehpreserve() {
+    branch=\"\$1\"; shift;
+    git rebase -i -Xours \"\$branch~1\" \"\$@\" ; }; ehpreserve"
+    echo "alias eh-preserve ✓"
+  else
+    echo "alias eh-preserve already defined"
+  fi; # eh-preserve
   if ! git config --global alias.nuke >/dev/null 2>&1; then
     git config --global alias.nuke "!nuke() {
     argc=\"\$#\";: \"\$((i=0))\";
