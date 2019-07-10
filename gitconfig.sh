@@ -490,6 +490,13 @@ gitconfig() {
   else
     echo "alias nuke already defined"
   fi; # nuke
+  if ! git config --global alias.prunelocal >/dev/null 2>&1; then
+    git config --global alias.prunelocal "!prunelocal() {
+    git fetch --prune && LANG=en_US git branch -vv | awk '/: gone]/{print \$1}' | xargs git branch -d; }; prunelocal"
+    echo "alias prunelocal ✓"
+  else
+    echo "alias prunelocal already defined"
+  fi; # prunelocal
 
 
   # https://thoughtbot.com/blog/sed-102-replace-in-place
