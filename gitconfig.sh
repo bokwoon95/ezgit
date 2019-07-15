@@ -424,6 +424,16 @@ gitconfig() {
   else
     echo "alias acpush already defined"
   fi; # acpush
+  if ! git config --global alias.acpushb >/dev/null 2>&1; then
+    git config --global alias.acpushb "!acpushb() {
+    if [ \"\$#\" -eq 0 ];
+    then git add . && git commit -v && git push origin \$(git branch | grep \\* | cut -d ' ' -f2);
+    else git add . && git commit -vm \"\$@\" && git push -u origin \$(git branch | grep \\* | cut -d ' ' -f2);
+    fi; }; acpushb"
+    echo "alias acpushb ✓"
+  else
+    echo "alias acpushb already defined"
+  fi; # acpushb
   if ! git config --global alias.facpush >/dev/null 2>&1; then
     git config --global alias.facpush "!facpush() {
     git add .
@@ -433,13 +443,13 @@ gitconfig() {
   else
     echo "alias facpush already defined"
   fi; # facpush
-  if ! git config --global alias.fac >/dev/null 2>&1; then
-    git config --global alias.fac "!fac() {
-    git add . && git commit --amend --no-edit; }; fac"
-    echo "alias fac ✓"
+  if ! git config --global alias.commitsf >/dev/null 2>&1; then
+    git config --global alias.commitsf "!commitsf() {
+    git add . && git commit --amend --no-edit; }; commitsf"
+    echo "alias commitsf ✓"
   else
-    echo "alias fac already defined"
-  fi; # fac
+    echo "alias commitsf already defined"
+  fi; # commitsf
   if ! git config --global alias.truncatehistory >/dev/null 2>&1; then
     git config --global alias.truncatehistory "!truncatehistory() {
     read -p 'Are you sure you want to delete everything but the latest commit? Enter \"YES TAKE ME AWAY\" to proceed: ' REPLY;
