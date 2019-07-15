@@ -497,6 +497,74 @@ gitconfig() {
   else
     echo "alias prunelocal already defined"
   fi; # prunelocal
+  if ! git config --global alias.st >/dev/null 2>&1; then
+    git config --global alias.st "stash"
+    echo "alias st ✓"
+  else
+    echo "alias st already defined"
+  fi; # st
+  if ! git config --global alias.stl >/dev/null 2>&1; then
+    git config --global alias.stl "stash list"
+    echo "alias stl ✓"
+  else
+    echo "alias stl already defined"
+  fi; # stl
+  if ! git config --global alias.sta >/dev/null 2>&1; then
+    git config --global alias.sta "stash apply"
+    echo "alias sta ✓"
+  else
+    echo "alias sta already defined"
+  fi; # sta
+  if ! git config --global alias.stpush >/dev/null 2>&1; then
+    git config --global alias.stpush "stash push"
+    echo "alias stpush ✓"
+  else
+    echo "alias stpush already defined"
+  fi; # stpush
+  if ! git config --global alias.stpushp >/dev/null 2>&1; then
+    git config --global alias.stpushp "stash push --patch"
+    echo "alias stpushp ✓"
+  else
+    echo "alias stpushp already defined"
+  fi; # stpushp
+  if ! git config --global alias.stpop >/dev/null 2>&1; then
+    git config --global alias.stpop "stash pop"
+    echo "alias stpop ✓"
+  else
+    echo "alias stpop already defined"
+  fi; # stpop
+  if ! git config --global alias.stdr >/dev/null 2>&1; then
+    git config --global alias.stdr "stash drop"
+    echo "alias stdr ✓"
+  else
+    echo "alias stdr already defined"
+  fi; # stdr
+  if ! git config --global alias.stcl >/dev/null 2>&1; then
+    git config --global alias.stcl "stash clear"
+    echo "alias stcl ✓"
+  else
+    echo "alias stcl already defined"
+  fi; # stcl
+  if ! git config --global alias.stsp >/dev/null 2>&1; then
+    git config --global alias.stsp "stash show -p"
+    echo "alias stsp ✓"
+  else
+    echo "alias stsp already defined"
+  fi; # stsp
+  if ! git config --global alias.stashstaged >/dev/null 2>&1; then
+    git config --global alias.stashstaged "!stashstaged() {
+    ALL_MSG=\"all \$(< /dev/urandom base64 | head -c10)\";
+    if [ \$# -eq 0 ];
+    then STAGED_MSG=\"stashstaged \$(< /dev/urandom base64 | head -c10)\";
+    else STAGED_MSG=\"stashstaged \$@\"; fi;
+    git stash push --message \"\$ALL_MSG\" --keep-index --include-untracked;
+    git stash push --message \"\$STAGED_MSG\";
+    ALL_STASH=\"\$(git stash list | grep \"\$ALL_MSG\" | awk '{print \$1}' | sed 's/:\$//')\";
+    git stash pop \"\$ALL_STASH\"; }; stashstaged"
+    echo "alias stashstaged ✓"
+  else
+    echo "alias stashstaged already defined"
+  fi; # stashstaged
 
 
   # https://thoughtbot.com/blog/sed-102-replace-in-place
