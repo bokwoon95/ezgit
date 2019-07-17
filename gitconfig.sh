@@ -507,6 +507,18 @@ gitconfig() {
   else
     echo "alias prunelocal already defined"
   fi; # prunelocal
+  if ! git config --global alias.diffx >/dev/null 2>&1; then
+    git config --global alias.diffx "!diffx() {
+    EXCLUDES='git diff -- .';
+    argc=\"\$#\";: \"\$((i=0))\";
+    while [ \"\$i\" -lt \"\$argc\" ]; do
+    EXCLUDES=\"\$EXCLUDES ':(exclude)\$1'\";
+    shift;: \"\$((i=i+1))\";
+    done; eval \"\$EXCLUDES\"; }; diffx"
+    echo "alias diffx ✓"
+  else
+    echo "alias diffx already defined"
+  fi; # diffx
 
   #~~~ stash commands ~~~#
   if ! git config --global alias.st >/dev/null 2>&1; then
