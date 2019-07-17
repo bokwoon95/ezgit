@@ -507,6 +507,8 @@ gitconfig() {
   else
     echo "alias prunelocal already defined"
   fi; # prunelocal
+
+  #~~~ stash commands ~~~#
   if ! git config --global alias.st >/dev/null 2>&1; then
     git config --global alias.st "stash"
     echo "alias st ✓"
@@ -525,24 +527,61 @@ gitconfig() {
   else
     echo "alias sta already defined"
   fi; # sta
-  if ! git config --global alias.stpush >/dev/null 2>&1; then
-    git config --global alias.stpush "stash push"
-    echo "alias stpush ✓"
-  else
-    echo "alias stpush already defined"
-  fi; # stpush
-  if ! git config --global alias.stpushp >/dev/null 2>&1; then
-    git config --global alias.stpushp "stash push --patch"
-    echo "alias stpushp ✓"
-  else
-    echo "alias stpushp already defined"
-  fi; # stpushp
   if ! git config --global alias.stpop >/dev/null 2>&1; then
     git config --global alias.stpop "stash pop"
     echo "alias stpop ✓"
   else
     echo "alias stpop already defined"
   fi; # stpop
+  if ! git config --global alias.stp >/dev/null 2>&1; then
+    git config --global alias.stp "stash push"
+    echo "alias stp ✓"
+  else
+    echo "alias stp already defined"
+  fi; # stp
+  if ! git config --global alias.stpp >/dev/null 2>&1; then
+    git config --global alias.stpp "stash push --patch"
+    echo "alias stpp ✓"
+  else
+    echo "alias stpp already defined"
+  fi; # stpp
+  if ! git config --global alias.stpm >/dev/null 2>&1; then
+    git config --global alias.stpm "!stpm() {
+    msg=\"\$1\"; shift;
+    git stash push --message \"\$msg\" \"\$@\"; }; stpm"
+    echo "alias stpm ✓"
+  else
+    echo "alias stpm already defined"
+  fi; # stpm
+  if ! git config --global alias.stppm >/dev/null 2>&1; then
+    git config --global alias.stppm "!stppm() {
+    msg=\"\$1\"; shift;
+    git stash push --patch --message \"\$msg\" \"\$@\"; }; stppm"
+    echo "alias stppm ✓"
+  else
+    echo "alias stppm already defined"
+  fi; # stppm
+  if ! git config --global alias.stin >/dev/null 2>&1; then
+    git config --global alias.stin "!stin() {
+    old=\$(git stash list | wc -l);
+    msg=\"GITSTASH.\$(< /dev/urandom base64 | head -c10 | sed 's/\//+/')\";
+    git stash push --message \"\$msg\";
+    new=\$(git stash list | wc -l);
+    [ \"\$old\" != \"\$new\" ] && rm -f /var/tmp/GITSTASH.* && touch \"/var/tmp/\$msg\"; }; stin"
+    echo "alias stin ✓"
+  else
+    echo "alias stin already defined"
+  fi; # stin
+  if ! git config --global alias.stout >/dev/null 2>&1; then
+    git config --global alias.stout "!stout() {
+    msg=\"\$(find /var/tmp/ -type f -name 'GITSTASH.*' | head -1 | awk -F/ '{print \$NF}')\";
+    [ \"\$msg\" != '' ] && stash=\"\$(git stash list | grep \"\$msg\" | awk '{print \$1}' | sed 's/:\$//')\";
+    [ \"\$stash\" != '' ] && git stash pop \"\$stash\";
+    rm -f /var/tmp/GITSTASH.*; }; stout"
+    echo "alias stout ✓"
+  else
+    echo "alias stout already defined"
+  fi; # stout
   if ! git config --global alias.stdr >/dev/null 2>&1; then
     git config --global alias.stdr "stash drop"
     echo "alias stdr ✓"
@@ -563,9 +602,9 @@ gitconfig() {
   fi; # stsp
   if ! git config --global alias.stashstaged >/dev/null 2>&1; then
     git config --global alias.stashstaged "!stashstaged() {
-    ALL_MSG=\"all \$(< /dev/urandom base64 | head -c10)\";
+    ALL_MSG=\"all \$(< /dev/urandom base64 | head -c10 | sed 's/\//+/')\";
     if [ \$# -eq 0 ];
-    then STAGED_MSG=\"stashstaged \$(< /dev/urandom base64 | head -c10)\";
+    then STAGED_MSG=\"stashstaged \$(< /dev/urandom base64 | head -c10 | sed 's/\//+/')\";
     else STAGED_MSG=\"stashstaged \$@\"; fi;
     git stash push --message \"\$ALL_MSG\" --keep-index --include-untracked;
     git stash push --message \"\$STAGED_MSG\";
