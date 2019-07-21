@@ -434,6 +434,13 @@ gitconfig() {
   else
     echo "alias acpushb already defined"
   fi; # acpushb
+  if ! git config --global alias.pushb >/dev/null 2>&1; then
+    git config --global alias.pushb "!pushb() {
+    git push -u origin \$(git branch | grep \\* | cut -d ' ' -f2); }; pushb"
+    echo "alias pushb ✓"
+  else
+    echo "alias pushb already defined"
+  fi; # pushb
   if ! git config --global alias.facpush >/dev/null 2>&1; then
     git config --global alias.facpush "!facpush() {
     git add .
