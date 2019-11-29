@@ -379,7 +379,7 @@ gitconfig() {
     [ \"\$(echo \"\$2\" | head -c1 )\" = '.' ] && fname=\".\$fname\";
     branch=\$(echo \"\$1\" | sed 's/[[:space:]]\\{1,\\}/_/g');
     if git show \"\$1\":\"\$2\" >/dev/null 2>&1;
-    then git show \"\$1\":\"\$2\" > \"\$fname.\$branch\$fext\"; git status;
+    then git show \"\$1\":\"\$2\" > \"\$fname \$branch\$fext\"; git status;
     else echo \"file '\$2' not found in branch '\$branch'\";
     fi; }; copyfile"
     echo "alias copyfile ✓"
