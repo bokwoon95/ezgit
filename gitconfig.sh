@@ -461,12 +461,13 @@ gitconfig() {
     git config --global alias.truncatehistory "!truncatehistory() {
     read -p 'Are you sure you want to delete everything but the latest commit? Enter \"YES TAKE ME AWAY\" to proceed: ' REPLY;
     [ \"\$REPLY\" != \"YES TAKE ME AWAY\" ] && exit;
+    branch=\"\$(git branch | grep \\* | cut -d ' ' -f2)\";
     git checkout --orphan latest_branch
     && git add -A
     && git commit -am \"Initial Commit\"
-    && git branch -D master
-    && git branch -m master
-    && git push -f origin master
+    && git branch -D \"\$branch\"
+    && git branch -m \"\$branch\"
+    && git push -f origin \"\$branch\"
     && echo \"History has been rewritten. Initial Commit.\"; }; truncatehistory"
     echo "alias truncatehistory ✓"
   else
